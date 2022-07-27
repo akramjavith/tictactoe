@@ -47,11 +47,13 @@ function handleClick(e) {
   }
 }
 
+
+
 function endGame(draw) {
   if (draw) {
     winningMessageTextElement.innerText = 'Draw!'
   } else {
-    winningMessageTextElement.innerText = `${circleTurn ? "Y's" : "X's"} Wins!`
+    winningMessageTextElement.innerText = `${circleTurn ? "O's" : "X's"} Wins!`
   }
   winningMessageElement.classList.add('show')
 }
@@ -79,6 +81,8 @@ function setBoardHoverClass() {
     board.classList.add(X_CLASS)
   }
 }
+
+
 
 function checkWin(currentClass) {
   return WINNING_COMBINATIONS.some(combination => {
