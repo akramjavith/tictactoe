@@ -1,36 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Tic-Tac-Toe game</title>
-   
-   </head> 
-   <body>
-    <div class="card">
-
-        <div class="message" id="message" style="color: #fff !important;">
-           Tic Tac Toe
-        </div>
-
-        <div class="board">
-            <button class="field" data-index="0"></button>
-            <button class="field" data-index="1"></button>
-            <button class="field no-r" data-index="2"></button>
-            <button class="field" data-index="3"></button>
-            <button class="field" data-index="4"></button>
-            <button class="field no-r" data-index="5"></button>
-            <button class="field no-b" data-index="6"></button>
-            <button class="field no-b" data-index="7"></button>
-            <button class="field no-b no-r" data-index="8"></button>
-        </div>
-
-        <div class="btm-btn">
-            <button class="restart-btn" id="restart-btn" style="color: rgb(236, 236, 0);">Restart</button>
-        </div>
-    </div>  
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="style.css">
+  
+  <title>Document</title>
+</head>
+<body>
+  <div class="board" id="board">
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+    <div class="cell" data-cell></div>
+  </div>
+  <div class="winning-message" id="winningMessage">
+    <div data-winning-message-text></div>
+    <button id="restartButton">Restart</button>
+  </div>
 </body>
-<script src="./app.js"></script>
+<script src="app.js" defer></script>
 </html>
