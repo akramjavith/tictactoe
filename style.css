@@ -1,7 +1,6 @@
 *{
     font-family: 'Montserrat', sans-serif;
     font-family: 'Rubik', sans-serif;
-    /* background-image: url("https://img.freepik.com/premium-photo/yellow-plastic-crosses-toe-ruled-field-playing-tic-tac-toe-blue-background-concept-xo-win-challenge-educational-game-kids_164357-2508.jpg?w=2000"); */
     /* background-color: blue; */
 }
 
@@ -14,6 +13,8 @@ body {
     justify-content: center;
     font-family: 'Montserrat', sans-serif;
     font-family: 'Rubik', sans-serif;
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTS_3T1tvkxELGkESsqiSomqK9dxzkGZdsQpg&usqp=CAU");
+
 }
 
 .card {
@@ -76,6 +77,10 @@ body {
     font-weight: 500;
     margin-bottom: 10px;
     background-color: gray;
+}
+
+.restart-btn:hover{
+    background-color: blue;
 }
 
 .btm-btn {
