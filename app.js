@@ -1,93 +1,141 @@
-const X_CLASS = 'x'
-const CIRCLE_CLASS = 'circle'
-const WINNING_COMBINATIONS = [
-  [0, 1, 2],
-  [3, 4, 5],
-  [6, 7, 8],
-  [0, 3, 6],
-  [1, 4, 7],
-  [2, 5, 8],
-  [0, 4, 8],
-  [2, 4, 6]
-]
-const cellElements = document.querySelectorAll('[data-cell]')
-const board = document.getElementById('board')
-const winningMessageElement = document.getElementById('winningMessage')
-const restartButton = document.getElementById('restartButton')
-const winningMessageTextElement = document.querySelector('[data-winning-message-text]')
-let circleTurn
 
-startGame()
+const Gameboard = (() => {
 
-restartButton.addEventListener('click', startGame)
+  let board = ["","","","","","","",""];
 
-function startGame() {
-  circleTurn = false
-  cellElements.forEach(cell => {
-    cell.classList.remove(X_CLASS)
-    cell.classList.remove(CIRCLE_CLASS)
-    cell.removeEventListener('click', handleClick)
-    cell.addEventListener('click', handleClick, { once: true })
-  })
-  setBoardHoverClass()
-  winningMessageElement.classList.remove('show')
-}
+  const placeMarker = (position, marker) => {
+      board[position] = marker;
+  };
 
-function handleClick(e) {
-  const cell = e.target
-  const currentClass = circleTurn ? CIRCLE_CLASS : X_CLASS
-  placeMark(cell, currentClass)
-  if (checkWin(currentClass)) {
-    endGame(false)
-  } else if (isDraw()) {
-    endGame(true)
-  } else {
-    swapTurns()
-    setBoardHoverClass()
+  const resetBoard = () => {
+      for (let i = 0; i < board.length; i++) {
+          board[i] = "";
+      }
+  };
+
+  const getField = (position) => {
+      if (position > board.length) return;
+      return board[position];
   }
-}
 
+  return {
+      placeMarker,
+      resetBoard,
+      getField
+  };
+})();
 
+const Player = (marker) => {
+  this.marker = marker;
 
-function endGame(draw) {
-  if (draw) {
-    winningMessageTextElement.innerText = 'Draw!'
-  } else {
-    winningMessageTextElement.innerText = `${circleTurn ? "O's" : "X's"} Wins!`
-  }
-  winningMessageElement.classList.add('show')
-}
+  const getMarker = () => {
+      return marker;
+  };
 
-function isDraw() {
-  return [...cellElements].every(cell => {
-    return cell.classList.contains(X_CLASS) || cell.classList.contains(CIRCLE_CLASS)
-  })
-}
+  return {
+      getMarker
+  };
+};
 
-function placeMark(cell, currentClass) {
-  cell.classList.add(currentClass)
-}
+const displayController = (() => {
+  const fieldElements = document.querySelectorAll(".field");
+  const restartBtn = document.getElementById("restart-btn");
+  const messageBox = document.getElementById("message");
 
-function swapTurns() {
-  circleTurn = !circleTurn
-}
+  fieldElements.forEach((field) => {
+      field.addEventListener("click", (e) => {
+          if (gameController.getGameOver() || e.target.textContent !== "") return;
+          gameController.playRound(parseInt(e.target.dataset.index));
+          updateGameBoard();
+      })
+  });
 
-function setBoardHoverClass() {
-  board.classList.remove(X_CLASS)
-  board.classList.remove(CIRCLE_CLASS)
-  if (circleTurn) {
-    board.classList.add(CIRCLE_CLASS)
-  } else {
-    board.classList.add(X_CLASS)
-  }
-}
+  restartBtn.addEventListener("click", (e) => {
+      Gameboard.resetBoard();
+      gameController.reset();
+      updateGameBoard();
+      setMessageElement("X's turn");
+  });
 
+  const updateGameBoard = () => {
+      for (let i = 0; i < fieldElements.length; i++) {
+          fieldElements[i].textContent = Gameboard.getField(i);
+      }
+  };
 
+  const setResultMessage = (winner) => {
+      if (winner === "Draw") {
+          setMessageElement("It's a draw!");
+      } else {
+          setMessageElement(`Player ${winner} has won!`);
+      }
+  };
 
-function checkWin(currentClass) {
-  return WINNING_COMBINATIONS.some(combination => {
-    return combination.every(index => {
-      return cellElements[index].classList.contains(currentClass)
-    })
-  })
-}
+  const setMessageElement = (message) => {
+      messageBox.textContent = message;
+  };
+
+  return {setResultMessage, setMessageElement};
+})();
+
+const gameController = (() => {
+  const playerOne = Player("X");
+  const playerTwo = Player("O");
+  let round = 1;
+  let gameOver = false;
+  
+  const playRound = (position) => {
+      Gameboard.placeMarker(position, getCurrentPlayerMarker());
+      if (checkWinner(position)) {
+          displayController.setResultMessage(getCurrentPlayerMarker());
+          gameOver = true;
+          return;
+      }
+
+      if (round === 9) {
+          displayController.setResultMessage("Draw");
+          gameOver = true;
+          return;
+      }
+      round++;
+      displayController.setMessageElement(
+          `Player ${getCurrentPlayerMarker()}'s turn`
+      );
+  };
+
+  const getCurrentPlayerMarker = () => {
+      return round % 2 === 1 ? playerOne.getMarker() : playerTwo.getMarker();
+  };
+
+  const checkWinner = (position) => {
+      const winConditions = [
+          [0,1,2],
+          [3,4,5],
+          [6,7,8],
+          [0,3,6],
+          [1,4,7],
+          [2,5,8],
+          [0,4,8],
+          [2,4,6]
+      ];
+
+      return winConditions
+          .filter((combination) => combination.includes(position))
+          .some((possibleCombination) =>
+          possibleCombination.every(
+              (index) => Gameboard.getField(index) === getCurrentPlayerMarker()
+          )
+          );
+  };
+
+  const getGameOver = () => {
+      return gameOver;
+  };
+
+  const reset = () => {
+      round = 1;
+      gameOver = false;
+  };
+
+  return {playRound, getGameOver, reset};
+})();
